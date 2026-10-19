@@ -1,0 +1,46 @@
+# Generador de QR VeriFactu
+
+> Herramienta gratuita que construye la URL del servicio de cotejo de la AEAT y el código QR tributario de VeriFactu (RD 1007/2023 y Orden HAC/1177/2024) a partir de los cuatro datos de la factura. Herramienta de Plataforma IA, consultora de automatización con IA en Madrid. Se ejecuta en el navegador: sin registro, sin permisos, sin servidores y sin enviar datos.
+
+## Qué genera
+
+- **URL de cotejo** con los cuatro parámetros que exige la AEAT: `nif` (NIF/NIE/CIF del emisor con dígito de control validado), `numserie` (hasta 60 caracteres ASCII imprimibles), `fecha` (DD-MM-AAAA) e `importe` (hasta 12 dígitos enteros y 2 decimales, con coma o punto).
+- **Código QR tributario** listo para imprimir en la factura, generado en local y descargable en SVG.
+- **Enlace de consulta en JSON** añadiendo `&formato=json`.
+
+## Las cuatro bases del servicio de cotejo
+
+- Producción con VERI*FACTU: `https://www2.agenciatributaria.gob.es/wlpl/TIKE-CONT/ValidarQR`
+- Producción sin VERI*FACTU: `https://www2.agenciatributaria.gob.es/wlpl/TIKE-CONT/ValidarQRNoVerifactu`
+- Pruebas con VERI*FACTU: `https://prewww2.aeat.es/wlpl/TIKE-CONT/ValidarQR`
+- Pruebas sin VERI*FACTU: `https://prewww2.aeat.es/wlpl/TIKE-CONT/ValidarQRNoVerifactu`
+
+## Códigos de error que replica
+
+- **2001**: NIF con formato erróneo o dígito de control inválido.
+- **2002**: número de serie vacío o de más de 60 caracteres.
+- **2003**: número de serie con caracteres fuera del rango ASCII 32-126.
+- **2004**: fecha que no es DD-MM-AAAA o fecha inexistente.
+- **2005**: importe con formato incorrecto o más de dos decimales.
+- **2006**: importe con más de 12 dígitos en la parte entera.
+
+## Fechas de obligación
+
+El Reglamento RD 1007/2023 escalona la obligación de emitir facturas verificables: **1 de enero de 2027** para las empresas sujetas a Impuesto de Sociedades y **1 de julio de 2027** para el resto de obligados (autónomos incluidos). El QR es obligatorio en toda factura emitida con software de facturación adaptado.
+
+## Detalle técnico
+
+El URL encoding replica el de `java.net.URLEncoder` (espacio como `+`), que es el que usa la AEAT, y no el de `encodeURIComponent`. Es la causa más frecuente de que un QR «parezca bien» y la AEAT lo rechace.
+
+## Límites honestos
+
+Genera el QR y la URL, no firma ni envía registros a la AEAT: eso lo hace el software de facturación. No sustituye la validación del productor del software.
+
+## Enlaces
+
+- [Herramienta](https://caseroclaw.github.io/verifactu-qr-web/)
+- [Plataforma IA — consultoría de automatización con IA en Madrid](https://plataformaia.com/)
+- [Guía de VeriFactu para pymes](https://plataformaia.com/es/blog/verifactu-2027-pymes-fechas-preparacion)
+- [Automatización de facturación y back-office con IA](https://plataformaia.com/es/automatizacion-ia)
+- [Código fuente (MIT)](https://github.com/caseroclaw/verifactu-qr-web)
+- [Extensión de navegador con la misma lógica](https://github.com/caseroclaw/verifactu-qr-extension)
