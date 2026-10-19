@@ -54,6 +54,8 @@ python3 -m http.server 8000   # servidor local opcional (no hace falta: es está
 
 MIT. Herramienta no oficial: la referencia normativa es la sede electrónica de la AEAT.
 
+Componentes de terceros: `vendor/qrcode.js` es *QR Code Generator for JavaScript* (qrcode-generator 1.4.4), © 2009 Kazuhiko Arase, licencia MIT, vendorizado sin modificar.
+
 ---
 
 ## English
