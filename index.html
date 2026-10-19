@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Generador de QR VeriFactu gratis — URL y QR tributario de la factura</title>
+  <meta name="description" content="Herramienta gratuita para generar la URL y el código QR tributario de VeriFactu (RD 1007/2023 y Orden HAC/1177/2024) desde los datos de la factura. Valida NIF/NIE/CIF, replica los códigos 2001-2006 de la AEAT y se ejecuta en tu navegador, sin registro, sin servidores y sin enviar datos.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://caseroclaw.github.io/verifactu-qr-web/">
+  <meta property="og:title" content="Generador de QR VeriFactu gratis">
+  <meta property="og:description" content="Genera la URL y el QR tributario de VeriFactu desde los cuatro datos de la factura. Gratis, sin registro y sin enviar datos a ningún servidor.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Generador de QR VeriFactu — Plataforma IA",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web (cualquier navegador moderno)",
+        "url": "https://caseroclaw.github.io/verifactu-qr-web/",
+        "inLanguage": ["es", "en"],
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+        "featureList": [
+          "URL del servicio de cotejo de la AEAT (4 bases: producción/pruebas con y sin VERI*FACTU)",
+          "Código QR tributario generado en local",
+          "Validación del dígito de control de NIF, NIE y CIF",
+          "Códigos de error 2001-2006 de la AEAT replicados",
+          "Enlace de consulta con formato=json",
+          "URL encoding idéntico a java.net.URLEncoder"
+        ],
+        "creator": {
+          "@type": "Organization",
+          "name": "Plataforma IA",
+          "url": "https://plataformaia.com/",
+          "description": "Consultora de automatización con IA para pymes en España, con sede en Madrid."
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "¿Qué tiene que contener el QR de una factura con VeriFactu?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "El QR de la factura debe codificar una URL con cuatro parámetros: nif (NIF del emisor), numserie (número de serie de la factura), fecha (fecha de expedición en formato DD-MM-AAAA) e importe (importe total en euros, con punto como separador decimal y sin ceros innecesarios). El parámetro formato=json nunca se incluye dentro del QR: solo se añade para consultar el servicio de cotejo y recibir la respuesta en JSON."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Cuándo es obligatorio el QR de VeriFactu para las pymes españolas?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "El Real Decreto 1007/2023 y el Real Decreto 254/2025 fijan la obligación para los contribuyentes del Impuesto sobre Sociedades el 1 de enero de 2027 y para el resto de obligados tributarios (autónomos y profesionales) el 1 de julio de 2027. Los fabricantes de software de facturación quedaron obligados antes, desde el 29 de julio de 2025."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Esta herramienta envía los datos de mi factura a algún servidor?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. La página no tiene backend, no usa cookies de seguimiento y no hace ninguna petición de red: la URL y el QR se calculan íntegramente en tu navegador. Puedes guardarla y usarla sin conexión una vez cargada."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Cómo se codifican los caracteres especiales en la URL del QR?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "La AEAT exige la misma codificación que java.net.URLEncoder con UTF-8: los caracteres seguros (letras, dígitos, guion, punto, asterisco y guion bajo) se mantienen, el espacio se convierte en el signo más (+) y el resto se codifica byte a byte en hexadecimal con porcentaje (%XX). Por eso un número de serie como 12345678&G33 aparece como numserie=12345678%26G33."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Qué significan los errores 2001 a 2006 que devuelve la AEAT?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "2001: el NIF tiene un formato erróneo o no es válido. 2002: el número de serie excede los 60 caracteres o está vacío. 2003: el número de serie contiene caracteres no permitidos (solo se admite ASCII imprimible, del 32 al 126). 2004: la fecha no tiene el formato DD-MM-AAAA o no es una fecha real. 2005: el importe tiene un formato incorrecto o más de dos decimales. 2006: el importe excede los 12 dígitos de parte entera."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿La herramienta sirve también para facturas que no están en VERI*FACTU?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sí. El sistema VERI*FACTU y el modo no VERI*FACTU usan URLs de cotejo distintas, igual que los entornos de producción y de pruebas. El selector de la herramienta cubre las cuatro combinaciones para que puedas comprobar el QR tanto en pruebas como en producción."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="marco">
+    <header>
+      <p class="kicker">Herramienta gratuita · sin registro · sin enviar datos</p>
+      <h1>Generador de QR VeriFactu</h1>
+      <p class="sub">Construye la <strong>URL del servicio de cotejo</strong> y el <strong>código QR tributario</strong> de una factura según el RD 1007/2023 y la Orden HAC/1177/2024. Todo se calcula en tu navegador.</p>
+    </header>
+
+    <main>
+      <section class="panel">
+        <form id="form" novalidate>
+          <div class="campo">
+            <label for="nif">NIF / NIE / CIF del emisor</label>
+            <input id="nif" name="nif" value="89890001K" autocomplete="off" spellcheck="false" placeholder="B12345678">
+          </div>
+
+          <div class="campo">
+            <label for="numserie">Número de serie de la factura</label>
+            <input id="numserie" name="numserie" value="12345678&amp;G33" autocomplete="off" spellcheck="false" placeholder="2026-A/0042">
+          </div>
+
+          <div class="fila">
+            <div class="campo">
+              <label for="fecha">Fecha de expedición</label>
+              <input id="fecha" name="fecha" value="01-01-2024" autocomplete="off" spellcheck="false" placeholder="DD-MM-AAAA">
+            </div>
+            <div class="campo">
+              <label for="importe">Importe total (€)</label>
+              <input id="importe" name="importe" value="241,40" autocomplete="off" spellcheck="false" placeholder="121,00">
+            </div>
+          </div>
+
+          <div class="fila">
+            <div class="campo">
+              <label for="entorno">Entorno</label>
+              <select id="entorno">
+                <option value="produccion">Producción</option>
+                <option value="pruebas">Pruebas (preproducción)</option>
+              </select>
+            </div>
+            <div class="campo">
+              <label for="verifactu">Sistema de facturación</label>
+              <select id="verifactu">
+                <option value="true">VERI*FACTU</option>
+                <option value="false">No VERI*FACTU</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="botones">
+            <button type="submit" class="primario">Generar QR</button>
+            <button type="button" id="ejemplo">Ejemplo oficial AEAT</button>
+            <button type="button" id="limpiar">Limpiar</button>
+          </div>
+        </form>
+
+        <section id="errores" class="errores" hidden>
+          <h2>Errores de validación (códigos AEAT)</h2>
+          <ul id="lista-errores"></ul>
+        </section>
+
+        <section id="salida" class="salida" hidden>
+          <div class="qr" id="qr"></div>
+          <div class="datos">
+            <h2>URL que debe codificar el QR</h2>
+            <textarea id="url" rows="6" readonly spellcheck="false"></textarea>
+            <div class="acciones-salida">
+              <button type="button" id="copiar">Copiar URL</button>
+              <a id="abrir" href="#" target="_blank" rel="noopener">Consultar en la AEAT (formato=json)</a>
+              <button type="button" id="svg">Descargar SVG</button>
+            </div>
+            <p class="pista" id="pista"></p>
+          </div>
+        </section>
+      </section>
+
+      <section class="texto">
+        <h2>Qué es el QR tributario de VeriFactu</h2>
+        <p>El <strong>QR tributario</strong> es la imagen que el Real Decreto 1007/2023 obliga a imprimir en cada factura expedida con un sistema de facturación adaptado a VeriFactu, para que cualquiera pueda comprobar la factura contra los registros de la Agencia Tributaria. El QR no contiene XML ni firma: codifica una <strong>URL del servicio de cotejo</strong> con cuatro parámetros:</p>
+        <ul>
+          <li><code>nif</code> — NIF, NIE o CIF del emisor de la factura.</li>
+          <li><code>numserie</code> — número de serie de la factura (máximo 60 caracteres ASCII).</li>
+          <li><code>fecha</code> — fecha de expedición en formato DD-MM-AAAA.</li>
+          <li><code>importe</code> — importe total en euros, máximo 12 dígitos de parte entera y 2 decimales.</li>
+        </ul>
+        <p>Existen cuatro URLs posibles según el entorno (producción o pruebas) y según el sistema de facturación (VERI*FACTU o no VERI*FACTU). Esta herramienta cubre las cuatro y añade el parámetro <code>formato=json</code> solo al enlace de consulta, nunca al contenido del QR.</p>
+
+        <h2>Fechas clave de la obligación</h2>
+        <ul>
+          <li><strong>1 de enero de 2027</strong> — obligados del Impuesto sobre Sociedades.</li>
+          <li><strong>1 de julio de 2027</strong> — autónomos y resto de obligados tributarios.</li>
+          <li><strong>29 de julio de 2025</strong> — fecha ya superada por los fabricantes de software de facturación.</li>
+        </ul>
+        <p>Si estás preparando la adaptación, la guía <a href="https://plataformaia.com/es/blog/verifactu-2027-pymes-fechas-preparacion">VeriFactu 2027 para pymes: fechas y preparación</a> repasa el calendario por tipo de empresa y lo que conviene automatizar desde ya.</p>
+
+        <h2>Cómo comprobar que tu QR es correcto</h2>
+        <ol>
+          <li>Introduce los cuatro datos tal como figuran en el registro de facturación.</li>
+          <li>Compara la URL generada con la que produce tu programa de facturación para la misma factura.</li>
+          <li>Pulsa el enlace «Consultar en la AEAT»: en producción devolverá la factura registrada; en pruebas responderá con los datos de preproducción.</li>
+          <li>Escanea el QR con el móvil y comprueba que el texto leído coincide exactamente con la URL mostrada.</li>
+        </ol>
+
+        <h2>Preguntas frecuentes</h2>
+        <details>
+          <summary>¿Qué tiene que contener el QR de una factura con VeriFactu?</summary>
+          <p>Una URL con los parámetros <code>nif</code>, <code>numserie</code>, <code>fecha</code> (DD-MM-AAAA) e <code>importe</code>. El parámetro <code>formato=json</code> no va dentro del QR, solo en la consulta al servicio de cotejo.</p>
+        </details>
+        <details>
+          <summary>¿Cuándo es obligatorio para las pymes españolas?</summary>
+          <p>Desde el 1 de enero de 2027 para los obligados del Impuesto sobre Sociedades y desde el 1 de julio de 2027 para autónomos y el resto de obligados. Los fabricantes de software ya están obligados desde el 29 de julio de 2025.</p>
+        </details>
+        <details>
+          <summary>¿Enviáis mis datos a algún servidor?</summary>
+          <p>No. No hay backend, no hay cookies de seguimiento y no se hace ninguna petición de red: el cálculo es local.</p>
+        </details>
+        <details>
+          <summary>¿Cómo se codifican los caracteres especiales?</summary>
+          <p>Igual que <code>java.net.URLEncoder</code> con UTF-8: el espacio pasa a <code>+</code>, los caracteres seguros se mantienen y el resto se codifica byte a byte como <code>%XX</code>.</p>
+        </details>
+        <details>
+          <summary>¿Qué son los errores 2001 a 2006?</summary>
+          <p>Son los códigos con los que la AEAT rechaza los datos del QR: 2001 NIF inválido, 2002 número de serie vacío o demasiado largo, 2003 caracteres no permitidos, 2004 fecha mal formada, 2005 importe mal formado o con más de 2 decimales, 2006 importe con más de 12 dígitos enteros.</p>
+        </details>
+        <details>
+          <summary>¿Sirve si mi facturación no está en VERI*FACTU?</summary>
+          <p>Sí: hay URLs de cotejo distintas para el modo VERI*FACTU y el no VERI*FACTU, en producción y en pruebas. El selector cubre las cuatro.</p>
+        </details>
+
+        <h2>English summary</h2>
+        <p>Free generator of the Spanish <strong>VeriFactu tax QR</strong> (Royal Decree 1007/2023 and Order HAC/1177/2024). It builds the AEAT verification URL and the QR image from four invoice fields — issuer NIF, invoice series number, issue date (DD-MM-AAAA) and total amount — covering the four verification bases (production/testing × VERI*FACTU/non-VERI*FACTU), with NIF/NIE/CIF checksum validation and AEAT error codes 2001-2006. No backend, no tracking, no network requests: everything runs in your browser.</p>
+      </section>
+    </main>
+
+    <footer>
+      <p>Herramienta gratuita de <a href="https://plataformaia.com/" target="_blank" rel="noopener">Plataforma IA</a>, consultora de automatización con IA para pymes en España (Madrid). Si estás adaptando tu facturación a VeriFactu o quieres automatizar su emisión, cobros y conciliación, <a href="https://plataformaia.com/" target="_blank" rel="noopener">podemos ayudarte</a>.</p>
+      <p>
+        <a href="https://plataformaia.com/es/blog/verifactu-2027-pymes-fechas-preparacion" target="_blank" rel="noopener">Guía VeriFactu 2027</a> ·
+        <a href="https://github.com/caseroclaw/verifactu-qr" target="_blank" rel="noopener">Librería Python, CLI y servidor MCP</a> ·
+        <a href="https://github.com/caseroclaw/verifactu-qr-extension" target="_blank" rel="noopener">Extensión de navegador (Edge/Chrome/Firefox)</a> ·
+        <a href="https://github.com/caseroclaw/verifactu-qr-web" target="_blank" rel="noopener">Código de esta página</a>
+      </p>
+      <p class="legal">Código MIT. Herramienta no oficial: la referencia normativa es siempre la sede electrónica de la AEAT. Los imports y fechas citados corresponden al RD 1007/2023, al RD 254/2025 y a la Orden HAC/1177/2024.</p>
+    </footer>
+  </div>
+
+  <script src="vendor/qrcode.js"></script>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
