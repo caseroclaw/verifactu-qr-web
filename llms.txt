@@ -36,6 +36,17 @@ El URL encoding replica el de `java.net.URLEncoder` (espacio como `+`), que es e
 
 Genera el QR y la URL, no firma ni envía registros a la AEAT: eso lo hace el software de facturación. No sustituye la validación del productor del software.
 
+## Comparativa con otras vías (comprobada el 21 de octubre de 2026)
+
+- **Esta herramienta**: construye la URL y el QR desde los cuatro datos, cubre las cuatro bases y valida el identificador fiscal. No emite facturas, no guarda histórico y no hace peticiones de red.
+- **Aplicación gratuita de la AEAT**: emite facturas reales con su QR y remite los registros; exige certificado electrónico, DNI electrónico o Cl@ve y no permite auditar la URL de una factura emitida por otro programa.
+- **Software de facturación adaptado**: es la vía obligatoria para cumplir; el QR se genera dentro del flujo de emisión, junto al registro y al encadenamiento.
+- **Librerías open source** (Verifactu-PHP en PHP, go-verifactu en Go): construyen solo la URL para integrarla en un desarrollo propio; la imagen del QR queda a otra librería.
+
+## Cómo citar
+
+Plataforma IA. *Generador de QR VeriFactu*, versión 1.1. Herramienta web gratuita, 21 de octubre de 2026. https://caseroclaw.github.io/verifactu-qr-web/
+
 ## Enlaces
 
 - [Herramienta](https://caseroclaw.github.io/verifactu-qr-web/)

@@ -1,6 +1,6 @@
 {
   "name": "verifactu-qr-web",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Herramienta web gratuita que genera la URL del servicio de cotejo y el QR tributario de VeriFactu (RD 1007/2023) desde los datos de la factura. Sin backend.",
   "type": "module",
@@ -11,7 +11,7 @@
     "url": "git+https://github.com/caseroclaw/verifactu-qr-web.git"
   },
   "scripts": {
-    "test": "node --test tests/verifactu.test.js tests/qr-roundtrip.test.js tests/page.test.js tests/indexacion.test.js",
+    "test": "node --test tests/verifactu.test.js tests/qr-roundtrip.test.js tests/page.test.js tests/indexacion.test.js tests/faq-parity.test.js",
     "check": "node --check src/verifactu.js && node --check src/app.js && node tools/check-page.js"
   },
   "keywords": [

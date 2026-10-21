@@ -31,7 +31,7 @@ test('el JSON-LD declara SoftwareApplication y FAQPage válidas', () => {
   assert.ok(tipos.includes('SoftwareApplication'), 'falta SoftwareApplication');
   assert.ok(tipos.includes('FAQPage'), 'falta FAQPage');
   const faq = datos['@graph'].find((n) => n['@type'] === 'FAQPage');
-  assert.equal(faq.mainEntity.length, 6, 'deben declararse 6 preguntas frecuentes');
+  assert.equal(faq.mainEntity.length, 8, 'deben declararse 8 preguntas frecuentes');
   for (const item of faq.mainEntity) {
     assert.equal(item['@type'], 'Question');
     assert.ok(item.name.length > 15 && item.acceptedAnswer.text.length > 80, 'respuesta demasiado corta: ' + item.name);

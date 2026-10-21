@@ -30,7 +30,8 @@ Ejemplo oficial: NIF `89890001K`, serie `12345678&G33`, fecha `01-01-2024`, impo
 
 ## Contenido del repositorio
 
-- `index.html` — página con el formulario, la explicación normativa, las FAQ y los datos estructurados (`SoftwareApplication` + `FAQPage`).
+- `src/faq.js` — fuente única de las preguntas frecuentes. `node tools/build-faq.js` genera de aquí la sección visible **y** el `FAQPage` del JSON-LD, y `tests/faq-parity.test.js` falla si ambas copias se separan aunque sea un carácter.
+- `index.html` — página con el formulario, la explicación normativa, las FAQ, el bloque «para quién es / para quién no», la comparativa de vías para obtener el QR, la referencia citable y los datos estructurados (`SoftwareApplication` + `FAQPage`).
 - `src/verifactu.js` — núcleo puro (URL, validaciones, códigos AEAT). Port fiel de la librería Python [`verifactu-qr`](https://github.com/caseroclaw/verifactu-qr).
 - `src/app.js` — interfaz: lee el formulario, valida y dibuja el QR.
 - `vendor/qrcode.js` — [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator) 1.4.4 (MIT), vendorizado sin modificar.
